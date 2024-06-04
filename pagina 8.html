@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio de Caída Libre: Velocidad Final de un Balón</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f7ff;
+            border: 1px solid #b3e0ff;
+            border-radius: 8px;
+        }
+        .animation {
+            margin-top: 20px;
+            height: 300px;
+            position: relative;
+            border: 1px solid #333;
+            background-color: #e0f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden;
+        }
+        .ball {
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+        }
+        .label {
+            position: absolute;
+            background-color: yellow;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .building {
+            width: 100px;
+            height: 100%;
+            background: linear-gradient(to top, #8e44ad, #d2b4de);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            border: 5px solid #8e44ad;
+            box-sizing: border-box;
+        }
+        .window {
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border: 1px solid #8e44ad;
+            margin: 2px;
+        }
+        .windows {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: flex-start;
+            height: 80%;
+            margin-top: 10%;
+        }
+        .step-container {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #fff3e6;
+            border: 1px solid #ffd1a4;
+            border-radius: 8px;
+        }
+        .step {
+            margin-bottom: 20px;
+        }
+        .step-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #d35400;
+        }
+        .step-description {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Ejercicio: Velocidad Final de un Balón desde un Edificio</h2>
+        <p>Imagina que lanzas un balón desde la azotea de un edificio con una velocidad inicial. Cambia la altura del edificio y la velocidad inicial para ver la velocidad final del balón al llegar al suelo.</p>
+        <div class="input-group">
+            <label for="altura2">Altura del edificio (en metros):</label>
+            <input type="number" id="altura2" value="20" min="0">
+        </div>
+        <div class="input-group">
+            <label for="velocidadInicial">Velocidad Inicial del balón (en m/s):</label>
+            <input type="number" id="velocidadInicial" value="0" min="0">
+        </div>
+        <button onclick="calcularVelocidad()">Calcular Velocidad Final</button>
+        <div id="resultado2" class="result"></div>
+        <div class="animation" id="animacion2">
+            <div class="building">
+                <div class="windows">
+                    <div class="window"></div>
+                    <div class="window"></div>
+                    <div class="window"></div>
+                    <div class="window"></div>
+                </div>
+                <div class="ball" id="balon2"></div>
+                <div class="label" id="labelA">A</div>
+                <div class="label" id="labelB">B</div>
+            </div>
+        </div>
+        <div class="step-container">
+            <h3>Segmentos del Movimiento</h3>
+            <div class="step">
+                <span class="step-number">Segmento A:</span>
+                <span class="step-description">Inicio de la caída.</span>
+                <ul>
+                    <li>Altura inicial (<strong>h</strong>): <span id="dataAlturaA">20</span> metros</li>
+                    <li>Velocidad inicial (<strong>v₀</strong>): <span id="dataVelocidadInicialA">0</span> m/s</li>
+                </ul>
+            </div>
+            <div class="step">
+                <span class="step-number">Segmento B:</span>
+                <span class="step-description">Final de la caída.</span>
+                <ul>
+                    <li>Altura final (<strong>h</strong>): 0 metros</li>
+                    <li>Velocidad final (<strong>v</strong>): <span id="dataVelocidadFinalB">19.80</span> m/s</li>
+                </ul>
+            </div>
+        </div>
+        <div class="step-container">
+            <h3>Pasos para Resolver el Ejercicio</h3>
+            <div class="step">
+                <span class="step-number">Paso 1:</span>
+                <span class="step-description">Identificar los datos del problema:</span>
+                <ul>
+                    <li>Altura del edificio (<strong>h</strong>): <span id="dataAltura">20</span> metros</li>
+                    <li>Velocidad inicial del balón (<strong>v₀</strong>): <span id="dataVelocidadInicial">0</span> m/s</li>
+                    <li>Aceleración debida a la gravedad (<strong>g</strong>): 9.8 m/s²</li>
+                </ul>
+            </div>
+            <div class="step">
+                <span class="step-number">Paso 2:</span>
+                <span class="step-description">Recordar la fórmula para calcular la velocidad final (<strong>v</strong>):</span>
+                <p><strong>v = √(v₀² + 2gh)</strong></p>
+            </div>
+            <div class="step">
+                <span class="step-number">Paso 3:</span>
+                <span class="step-description">Sustituir los valores en la fórmula:</span>
+                <p><strong>v = √( <span id="valorVelocidadInicial">0</span>² + 2 * 9.8 * <span id="valorAltura">20</span> )</strong></p>
+            </div>
+            <div class="step">
+                <span class="step-number">Paso 4:</span>
+                <span class="step-description">Calcular el valor dentro de la raíz:</span>
+                <p><strong>v = √( <span id="calculoInterno">0 + 392</span> )</strong></p>
+            </div>
+            <div class="step">
+                <span class="step-number">Paso 5:</span>
+                <span class="step-description">Obtener la velocidad final calculando la raíz cuadrada:</span>
+                <p><strong>v = √392 ≈ <span id="valorFinal">19.80</span> m/s</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calcularVelocidad() {
+            const g = 9.8; // Aceleración debido a la gravedad (m/s^2)
+            const altura = parseFloat(document.getElementById('altura2').value);
+            const velocidadInicial = parseFloat(document.getElementById('velocidadInicial').value);
+
+            if (altura < 0 || velocidadInicial < 0) {
+                document.getElementById('resultado2').innerHTML = 'La altura y la velocidad inicial no pueden ser negativas.';
+                return;
+            }
+
+            const velocidadFinal = Math.sqrt(velocidadInicial ** 2 + 2 * g * altura).toFixed(2); // Velocidad final (m/s)
+
+            // Actualizar datos en los pasos
+            document.getElementById('dataAltura').innerText = altura;
+            document.getElementById('dataVelocidadInicial').innerText = velocidadInicial;
+            document.getElementById('dataAlturaA').innerText = altura;
+            document.getElementById('dataVelocidadInicialA').innerText = velocidadInicial;
+            document.getElementById('valorVelocidadInicial').innerText = velocidadInicial;
+            document.getElementById('valorAltura').innerText = altura;
+            const calculoInterno = (velocidadInicial ** 2 + 2 * g * altura).toFixed(2);
+            document.getElementById('calculoInterno').innerText = calculoInterno;
+            document.getElementById('valorFinal').innerText = velocidadFinal;
+            document.getElementById('dataVelocidadFinalB').innerText = velocidadFinal;
+
+            document.getElementById('resultado2').innerHTML = `
+                <strong>Resultados:</strong><br>
+                Altura del edificio: ${altura} metros<br>
+                Velocidad Inicial del balón: ${velocidadInicial} m/s<br>
+                Velocidad Final del balón: ${velocidadFinal} m/s<br>
+            `;
+
+            // Simulación de la caída del balón
+            const balon = document.getElementById('balon2');
+            const animacion = document.getElementById('animacion2');
+            const duracion = Math.sqrt((2 * altura) / g) * 1000; // Convertir tiempo a milisegundos
+
+            balon.style.transition = `top ${duracion / 1000}s linear`;
+            balon.style.top = `${animacion.clientHeight - balon.clientHeight}px`;
+
+            // Posicionar etiquetas A y B
+            document.getElementById('labelA').style.top = '0';
+            document.getElementById('labelA').style.left = `${balon.offsetLeft + 35}px`;
+            document.getElementById('labelB').style.top = `${animacion.clientHeight - balon.clientHeight}px`;
+            document.getElementById('labelB').style.left = `${balon.offsetLeft + 35}px`;
+
+            // Resetear la posición del balón después de la animación
+            setTimeout(() => {
+                balon.style.transition = '';
+                balon.style.top = '0';
+            }, duracion);
+        }
+    </script>
+</body>
+</html>
